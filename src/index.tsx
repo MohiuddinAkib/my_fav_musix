@@ -8,6 +8,8 @@ import { Provider } from "./context/YoutubeContext";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { BrowserRouter as Router } from "react-router-dom";
 
+console.log("env variable", process.env["REACT_APP_YOUTUBE_SEARCH_API_KEY"]);
+
 ReactDOM.render(
   <Router>
     <ThemeProvider theme={theme}>
