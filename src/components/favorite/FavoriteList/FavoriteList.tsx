@@ -2,6 +2,7 @@ import React from "react";
 import SadSongs from "../SadSongs";
 import RockSongs from "../RockSongs";
 import { YoutubeContext } from "../../../context/YoutubeContext";
+import ThagoreSongs from "../ThagoreSongs";
 
 const FavoriteList = () => {
   const context: any = React.useContext(YoutubeContext);
@@ -14,7 +15,7 @@ const FavoriteList = () => {
       return <RockSongs />;
 
     case "thagore_mood":
-      return <RockSongs />;
+      return <ThagoreSongs />;
 
     default:
       return <SadSongs />;
