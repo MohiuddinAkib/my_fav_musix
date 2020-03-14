@@ -32,7 +32,7 @@ const FavCategory = () => {
     <Grid100Vh>
       <Box marginBottom={theme.spacing(0.3)}>
         <Typography color="primary" variant={mobile ? "h6" : "h4"}>
-          MY FAVORITE SONGS BASED
+          SOME OF MY FAVORITE SONGS BASED
         </Typography>
         <Typography color="primary" variant={mobile ? "h6" : "h4"}>
           ON MY MOOD
