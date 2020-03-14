@@ -9,7 +9,9 @@ import {
   Tab,
   Typography,
   Box,
-  CircularProgress
+  CircularProgress,
+  useTheme,
+  useMediaQuery
 } from "@material-ui/core";
 import useYoutubeSearchByVideoIds from "../../../hooks/youtube/useYoutubeSearchByVideoIds";
 
@@ -27,6 +29,8 @@ const SadSongs = () => {
   const [vids, setVids] = React.useState<string[]>([]);
   const context: any = React.useContext(YoutubeContext);
   const [{ data, loading, error }, refetch] = useYoutubeSearchByVideoIds(vids);
+  const theme = useTheme();
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   React.useEffect(() => {
     setVids(
@@ -81,7 +85,8 @@ const SadSongs = () => {
           label={
             <Typography
               gutterBottom
-              variant="h4"
+              variant={mobile ? "body1" : "h4"}
+              component={mobile ? "p" : "h4"}
               align="center"
               color="textPrimary"
               className={
@@ -97,9 +102,10 @@ const SadSongs = () => {
           label={
             <Typography
               gutterBottom
-              variant="h4"
+              variant={mobile ? "body1" : "h4"}
               align="center"
               color="textPrimary"
+              component={mobile ? "p" : "h4"}
               className={
                 context.songLang === "bangla" ? classes.typography : ""
               }

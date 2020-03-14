@@ -6,7 +6,9 @@ import {
   Box,
   Typography,
   Tabs,
-  Tab
+  Tab,
+  useTheme,
+  useMediaQuery
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import { FavSong } from "../../../interfaces/FavSong";
@@ -27,6 +29,8 @@ const RockSongs = () => {
   const [vids, setVids] = React.useState<string[]>([]);
   const context: any = React.useContext(YoutubeContext);
   const [{ data, loading, error }, refetch] = useYoutubeSearchByVideoIds(vids);
+  const theme = useTheme();
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   React.useEffect(() => {
     setVids(
@@ -75,7 +79,8 @@ const RockSongs = () => {
           label={
             <Typography
               gutterBottom
-              variant="h4"
+              variant={mobile ? "body1" : "h4"}
+              component={mobile ? "p" : "h4"}
               align="center"
               color="textPrimary"
               className={
@@ -91,7 +96,8 @@ const RockSongs = () => {
           label={
             <Typography
               gutterBottom
-              variant="h4"
+              variant={mobile ? "body1" : "h4"}
+              component={mobile ? "p" : "h4"}
               align="center"
               color="textPrimary"
               className={

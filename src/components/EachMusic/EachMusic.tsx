@@ -12,7 +12,7 @@ import {
   useTheme,
   Chip,
   useMediaQuery,
-  LinearProgress
+  Slider
 } from "@material-ui/core";
 import PauseIcon from "@material-ui/icons/Pause";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
@@ -51,6 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const EachMusic: React.FC<{ item: any }> = props => {
+  const player = React.useRef<ReactPlayer>();
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
   const classes = useStyles({ mobile });
@@ -59,27 +60,25 @@ const EachMusic: React.FC<{ item: any }> = props => {
   const [loadedProgess, setLoadedProgress] = React.useState(0);
   const [playedSeconds, setPlayedSeconds] = React.useState(0);
   const [duration, setDuration] = React.useState(0);
+  const [seeking, setSeeking] = React.useState(false);
 
   const handlePlay = () => {
     context.setPlaying((prevState: boolean) => !prevState);
     context.setPlayingVid(props.item.id);
   };
 
-  const handleProgess = ({
-    played,
-    playedSeconds,
-    loaded,
-    loadedSeconds
-  }: {
+  const handleProgess = ({played, playedSeconds, loaded}: {
     played: any;
     playedSeconds: any;
     loaded: any;
     loadedSeconds: any;
   }) => {
-    setPlayedProgress(played);
-    setPlayedSeconds(playedSeconds);
+    if (!seeking) {
+        setPlayedProgress(played * 100);
+        setPlayedSeconds(playedSeconds);
+        setLoadedProgress(loaded * 100);
+    }
 
-    setLoadedProgress(loaded);
   };
 
   const handlePause = () => {
@@ -88,8 +87,28 @@ const EachMusic: React.FC<{ item: any }> = props => {
   };
 
   const handleDuration = (duration: number) => {
-    console.log(duration);
     setDuration(duration);
+  };
+
+  const handleEnded = () => {
+    context.setPlaying((prevState: boolean) => false);
+    context.setPlayingVid("");
+  };
+
+  const handleSeek = (event: any, newValue: number | number[]) => {
+    console.log(newValue);
+    setSeeking(true);
+    setPlayedProgress(newValue as number);
+    player.current!.seekTo(parseFloat(newValue.toString()));
+  };
+
+  const handleSeekMouseDown = () => {
+    setSeeking(true);
+  };
+
+  const handleSeekMouseUp = () => {
+    setSeeking(false);
+    player.current!.seekTo(parseFloat(playedProgress.toString()));
   };
 
   return (
@@ -104,11 +123,14 @@ const EachMusic: React.FC<{ item: any }> = props => {
       />
       <Box display="none">
         <ReactPlayer
+          ref={player as any}
           playing={context.playing && context.playingVid === props.item.id}
           url={`https://www.youtube.com/watch?v=${props.item.id}`}
           onProgress={handleProgess}
           onPause={handlePause}
           onDuration={handleDuration}
+          onEnded={handleEnded}
+          pip={false}
         />
       </Box>
       <Box display="flex" flexDirection="column">
@@ -141,11 +163,13 @@ const EachMusic: React.FC<{ item: any }> = props => {
             </Box>
           </Typography>
         </CardContent>
-        <LinearProgress
-          variant="determinate"
+        <Slider
           value={playedProgress}
-          valueBuffer={loadedProgess}
+          // valueBuffer={loadedProgess}
           color="secondary"
+          onChange={handleSeek}
+          onMouseDown={handleSeekMouseDown}
+          onMouseUp={handleSeekMouseUp}
         />
         <Box display="flex" justifyContent="space-around">
           <Typography>
